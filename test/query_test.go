@@ -2,8 +2,8 @@ package test
 
 import (
 	"fmt"
+	"github.com/miqdadyyy/gorm-advanced-filter"
 	"github.com/stretchr/testify/assert"
-	"gorm-advanced-filter"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"

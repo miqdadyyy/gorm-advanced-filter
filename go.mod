@@ -1,4 +1,4 @@
-module gorm-advanced-filter
+module github.com/miqdadyyy/gorm-advanced-filter
 
 go 1.16
 

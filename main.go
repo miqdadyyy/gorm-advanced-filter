@@ -10,10 +10,10 @@ import (
 )
 
 type Clause struct {
-	Column       string   `json:"column"`
-	FunctionName string   `json:"function_name"`
-	Value        string   `json:"value"`
-	Operator     string   `json:"operator"`
+	Column       string    `json:"column"`
+	FunctionName string    `json:"function_name"`
+	Value        string    `json:"value"`
+	Operator     string    `json:"operator"`
 	Group        []*Clause `json:"group"`
 }
 
@@ -24,32 +24,32 @@ type Filter struct {
 
 func (filter *Filter) Contains(value, column, operator string) *Filter {
 	filter.encoded = append(filter.encoded, &Clause{
-		Column: column,
+		Column:       column,
 		FunctionName: "Contains",
-		Value: value,
-		Operator: operator,
+		Value:        value,
+		Operator:     operator,
 	})
 
-	return filter.parse(fmt.Sprintf("%%%s%%", value), column, "LIKE", operator)
+	return filter.parse("%%"+value+"%%", column, "LIKE", operator)
 }
 
 func (filter *Filter) DoesNotContains(value, column, operator string) *Filter {
 	filter.encoded = append(filter.encoded, &Clause{
-		Column: column,
+		Column:       column,
 		FunctionName: "DoesNotContains",
-		Value: value,
-		Operator: operator,
+		Value:        value,
+		Operator:     operator,
 	})
 
-	return filter.parse(fmt.Sprintf("%%%s%%", value), column, "NOT LIKE", operator)
+	return filter.parse("%%"+value+"%%", column, "NOT LIKE", operator)
 }
 
 func (filter *Filter) Is(value, column, operator string) *Filter {
 	filter.encoded = append(filter.encoded, &Clause{
-		Column: column,
+		Column:       column,
 		FunctionName: "Is",
-		Value: value,
-		Operator: operator,
+		Value:        value,
+		Operator:     operator,
 	})
 
 	return filter.parse(value, column, "=", operator)
@@ -57,10 +57,10 @@ func (filter *Filter) Is(value, column, operator string) *Filter {
 
 func (filter *Filter) IsNot(value, column, operator string) *Filter {
 	filter.encoded = append(filter.encoded, &Clause{
-		Column: column,
+		Column:       column,
 		FunctionName: "IsNot",
-		Value: value,
-		Operator: operator,
+		Value:        value,
+		Operator:     operator,
 	})
 
 	return filter.parse(value, column, "!=", operator)
@@ -68,32 +68,32 @@ func (filter *Filter) IsNot(value, column, operator string) *Filter {
 
 func (filter *Filter) StartWith(value, column, operator string) *Filter {
 	filter.encoded = append(filter.encoded, &Clause{
-		Column: column,
+		Column:       column,
 		FunctionName: "StartWith",
-		Value: value,
-		Operator: operator,
+		Value:        value,
+		Operator:     operator,
 	})
 
-	return filter.parse(fmt.Sprintf("%s%%", value), column, "LIKE", operator)
+	return filter.parse(value+"%%", column, "LIKE", operator)
 }
 
 func (filter *Filter) EndWith(value, column, operator string) *Filter {
 	filter.encoded = append(filter.encoded, &Clause{
-		Column: column,
+		Column:       column,
 		FunctionName: "EndWith",
-		Value: value,
-		Operator: operator,
+		Value:        value,
+		Operator:     operator,
 	})
 
-	return filter.parse(fmt.Sprintf("%%%s", value), column, "LIKE", operator)
+	return filter.parse("%%"+value, column, "LIKE", operator)
 }
 
 func (filter *Filter) Equal(value, column, operator string) *Filter {
 	filter.encoded = append(filter.encoded, &Clause{
-		Column: column,
+		Column:       column,
 		FunctionName: "Equal",
-		Value: value,
-		Operator: operator,
+		Value:        value,
+		Operator:     operator,
 	})
 
 	return filter.Is(value, column, operator)
@@ -101,10 +101,10 @@ func (filter *Filter) Equal(value, column, operator string) *Filter {
 
 func (filter *Filter) NotEqual(value, column, operator string) *Filter {
 	filter.encoded = append(filter.encoded, &Clause{
-		Column: column,
+		Column:       column,
 		FunctionName: "NotEqual",
-		Value: value,
-		Operator: operator,
+		Value:        value,
+		Operator:     operator,
 	})
 
 	return filter.parse(value, column, "<>", operator)
@@ -112,10 +112,10 @@ func (filter *Filter) NotEqual(value, column, operator string) *Filter {
 
 func (filter *Filter) LessThan(value, column, operator string) *Filter {
 	filter.encoded = append(filter.encoded, &Clause{
-		Column: column,
+		Column:       column,
 		FunctionName: "LessThan",
-		Value: value,
-		Operator: operator,
+		Value:        value,
+		Operator:     operator,
 	})
 
 	return filter.parse(value, column, "<", operator)
@@ -123,10 +123,10 @@ func (filter *Filter) LessThan(value, column, operator string) *Filter {
 
 func (filter *Filter) MoreThan(value, column, operator string) *Filter {
 	filter.encoded = append(filter.encoded, &Clause{
-		Column: column,
+		Column:       column,
 		FunctionName: "MoreThan",
-		Value: value,
-		Operator: operator,
+		Value:        value,
+		Operator:     operator,
 	})
 
 	return filter.parse(value, column, ">", operator)
@@ -134,10 +134,10 @@ func (filter *Filter) MoreThan(value, column, operator string) *Filter {
 
 func (filter *Filter) LessThanEqual(value, column, operator string) *Filter {
 	filter.encoded = append(filter.encoded, &Clause{
-		Column: column,
+		Column:       column,
 		FunctionName: "LessThanEqual",
-		Value: value,
-		Operator: operator,
+		Value:        value,
+		Operator:     operator,
 	})
 
 	return filter.parse(value, column, "<=", operator)
@@ -145,10 +145,10 @@ func (filter *Filter) LessThanEqual(value, column, operator string) *Filter {
 
 func (filter *Filter) MoreThanEqual(value, column, operator string) *Filter {
 	filter.encoded = append(filter.encoded, &Clause{
-		Column: column,
+		Column:       column,
 		FunctionName: "MoreThanEqual",
-		Value: value,
-		Operator: operator,
+		Value:        value,
+		Operator:     operator,
 	})
 
 	return filter.parse(value, column, ">=", operator)
@@ -156,10 +156,10 @@ func (filter *Filter) MoreThanEqual(value, column, operator string) *Filter {
 
 func (filter *Filter) At(value, column, operator string) *Filter {
 	filter.encoded = append(filter.encoded, &Clause{
-		Column: column,
+		Column:       column,
 		FunctionName: "At",
-		Value: value,
-		Operator: operator,
+		Value:        value,
+		Operator:     operator,
 	})
 
 	return filter.parse(fmt.Sprintf("%s", value), fmt.Sprintf("%s", column), "=", operator)
@@ -167,10 +167,10 @@ func (filter *Filter) At(value, column, operator string) *Filter {
 
 func (filter *Filter) Before(value, column, operator string) *Filter {
 	filter.encoded = append(filter.encoded, &Clause{
-		Column: column,
+		Column:       column,
 		FunctionName: "Before",
-		Value: value,
-		Operator: operator,
+		Value:        value,
+		Operator:     operator,
 	})
 
 	return filter.parse(fmt.Sprintf("%s", value), fmt.Sprintf("%s", column), "<", operator)
@@ -178,10 +178,10 @@ func (filter *Filter) Before(value, column, operator string) *Filter {
 
 func (filter *Filter) After(value, column, operator string) *Filter {
 	filter.encoded = append(filter.encoded, &Clause{
-		Column: column,
+		Column:       column,
 		FunctionName: "After",
-		Value: value,
-		Operator: operator,
+		Value:        value,
+		Operator:     operator,
 	})
 
 	return filter.parse(fmt.Sprintf("%s", value), fmt.Sprintf("%s", column), ">", operator)
@@ -214,30 +214,31 @@ func (filter *Filter) Build() string {
 
 func Parse(db *gorm.DB, input string) (*Filter, error) {
 	filter := MakeGormAdvancedFilter(db)
+	var encodedData []*Clause
 	// Total 15 functions
-	functions := map[string]interface{} {
-		"Contains": filter.Contains,
+	functions := map[string]interface{}{
+		"Contains":        filter.Contains,
 		"DoesNotContains": filter.DoesNotContains,
-		"Is": filter.Is,
-		"IsNot": filter.IsNot,
-		"StartWith": filter.StartWith,
-		"EndWith": filter.EndWith,
-		"Equal": filter.Equal,
-		"NotEqual": filter.NotEqual,
-		"LessThan": filter.LessThan,
-		"MoreThan": filter.MoreThan,
-		"LessThanEqual": filter.LessThanEqual,
-		"MoreThanEqual": filter.MoreThanEqual,
-		"At": filter.At,
-		"Before": filter.Before,
-		"After": filter.After,
+		"Is":              filter.Is,
+		"IsNot":           filter.IsNot,
+		"StartWith":       filter.StartWith,
+		"EndWith":         filter.EndWith,
+		"Equal":           filter.Equal,
+		"NotEqual":        filter.NotEqual,
+		"LessThan":        filter.LessThan,
+		"MoreThan":        filter.MoreThan,
+		"LessThanEqual":   filter.LessThanEqual,
+		"MoreThanEqual":   filter.MoreThanEqual,
+		"At":              filter.At,
+		"Before":          filter.Before,
+		"After":           filter.After,
 	}
 
-	if err := json.Unmarshal([]byte(input), &filter.encoded); err != nil {
+	if err := json.Unmarshal([]byte(input), &encodedData); err != nil {
 		return nil, err
 	}
 
-	for _, filterClause := range filter.encoded {
+	for _, filterClause := range encodedData {
 		function := reflect.ValueOf(functions[filterClause.FunctionName])
 		params := []string{
 			filterClause.Value,
@@ -245,7 +246,7 @@ func Parse(db *gorm.DB, input string) (*Filter, error) {
 			filterClause.Operator,
 		}
 
-		input :=  make([]reflect.Value, len(params))
+		input := make([]reflect.Value, len(params))
 		for key, param := range params {
 			input[key] = reflect.ValueOf(param)
 		}

@@ -187,6 +187,23 @@ func (filter *Filter) After(value, column, operator string) *Filter {
 	return filter.parse(fmt.Sprintf("%s", value), fmt.Sprintf("%s", column), ">", operator)
 }
 
+func (filter *Filter) Between(start, end, column, operator string) *Filter {
+	filter.encoded = append(filter.encoded, &Clause{
+		Column:       column,
+		FunctionName: "Between",
+		Value:        fmt.Sprintf("%s:%s", start, end),
+		Operator:     operator,
+	})
+
+	if strings.ToLower(operator) == "or" {
+		filter.query = filter.query.Or(fmt.Sprintf("%s BETWEEN ? AND ?", column), start, end)
+	} else {
+		filter.query = filter.query.Where(fmt.Sprintf("%s BETWEEN ? AND ?", column), start, end)
+	}
+
+	return filter
+}
+
 func (filter *Filter) parse(value, column, expression, operator string) *Filter {
 	if strings.ToLower(operator) == "or" {
 		filter.query = filter.query.Or(fmt.Sprintf("%s %s ?", column, expression), value)
@@ -232,6 +249,7 @@ func Parse(db *gorm.DB, input string) (*Filter, error) {
 		"At":              filter.At,
 		"Before":          filter.Before,
 		"After":           filter.After,
+		"Between":         filter.Between,
 	}
 
 	if err := json.Unmarshal([]byte(input), &encodedData); err != nil {
@@ -239,13 +257,15 @@ func Parse(db *gorm.DB, input string) (*Filter, error) {
 	}
 
 	for _, filterClause := range encodedData {
-		function := reflect.ValueOf(functions[filterClause.FunctionName])
-		params := []string{
-			filterClause.Value,
-			filterClause.Column,
-			filterClause.Operator,
+		var params []string
+		if filterClause.FunctionName == "Between" {
+			args := strings.Split(filterClause.Value, ":")
+			params = append(params, args[0], args[1], filterClause.Column, filterClause.Operator)
+		} else {
+			params = append(params, filterClause.Value, filterClause.Column, filterClause.Operator)
 		}
 
+		function := reflect.ValueOf(functions[filterClause.FunctionName])
 		input := make([]reflect.Value, len(params))
 		for key, param := range params {
 			input[key] = reflect.ValueOf(param)
